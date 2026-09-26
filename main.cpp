@@ -1,5 +1,8 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <string>
+
+void movement(int &currentColumn, int &currentRow, std::string &direction);
 
 const int cellSize = 20;
 const int gridWidth = 45;
@@ -11,8 +14,11 @@ int main()
 {
     int currentColumn = 22;
     int currentRow = 22;
-    float x = static_cast<float>(currentColumn * cellSize);
-    float y = static_cast<float>(currentRow * cellSize);
+    const float moveInterval = 0.1f;
+
+    std::string direction = "right";
+
+    sf::Clock clock;
 
     sf::RenderWindow window(sf::VideoMode(windowLength, windowHeight), "Snake window");
 
@@ -29,11 +35,32 @@ int main()
                 window.close();
         }
 
+        if (clock.getElapsedTime().asSeconds() >= moveInterval)
+        {
+            movement(currentColumn, currentRow, direction);
+            clock.restart();
+        }
+
         window.clear();
+        float x = static_cast<float>(currentColumn * cellSize);
+        float y = static_cast<float>(currentRow * cellSize);
         snake.setPosition({x, y});
         window.draw(snake);
         window.display();
     }
 
     return 0;
+}
+
+void movement(int &column, int &row, std::string &direction)
+{
+    // Row 0 is top of window
+    if (direction == "up")
+        row -= 1;
+    else if (direction == "down")
+        row += 1;
+    else if (direction == "left")
+        column -= 1;
+    else if (direction == "right")
+        column += 1;
 }
