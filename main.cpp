@@ -3,6 +3,7 @@
 #include <string>
 
 void movement(int &currentColumn, int &currentRow, std::string &direction);
+bool hitWall(int &column, int &row);
 
 const int cellSize = 20;
 const int gridWidth = 45;
@@ -12,6 +13,8 @@ const int windowHeight = gridHeight * cellSize;
 
 int main()
 {
+    bool gameOver = false;
+
     int currentColumn = 22;
     int currentRow = 22;
 
@@ -48,9 +51,11 @@ int main()
             }
         }
 
-        if (clock.getElapsedTime().asSeconds() >= moveInterval)
+        if (clock.getElapsedTime().asSeconds() >= moveInterval && !gameOver)
         {
             movement(currentColumn, currentRow, direction);
+            if (hitWall(currentColumn, currentRow))
+                gameOver = true;
             lastDirection = direction;
             clock.restart();
         }
@@ -77,4 +82,9 @@ void movement(int &column, int &row, std::string &direction)
         column -= 1;
     else if (direction == "right")
         column += 1;
+}
+
+bool hitWall(int &column, int &row)
+{
+    return (column < 0 || column >= gridWidth || row < 0 || row >= gridHeight);
 }
