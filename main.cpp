@@ -53,9 +53,18 @@ int main()
 
         if (clock.getElapsedTime().asSeconds() >= moveInterval && !gameOver)
         {
-            movement(currentColumn, currentRow, direction);
-            if (hitWall(currentColumn, currentRow))
+            int nextColumn = currentColumn;
+            int nextRow = currentRow;
+            movement(nextColumn, nextRow, direction);
+
+            if (hitWall(nextColumn, nextRow))
                 gameOver = true;
+            else
+            {
+                currentColumn = nextColumn;
+                currentRow = nextRow;
+            }
+
             lastDirection = direction;
             clock.restart();
         }
