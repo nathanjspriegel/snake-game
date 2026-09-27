@@ -14,9 +14,11 @@ int main()
 {
     int currentColumn = 22;
     int currentRow = 22;
+
     const float moveInterval = 0.1f;
 
     std::string direction = "right";
+    std::string lastDirection = "right";
 
     sf::Clock clock;
 
@@ -33,11 +35,23 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (event.key.code == sf::Keyboard::Up && lastDirection != "down")
+                    direction = "up";
+                if (event.key.code == sf::Keyboard::Down && lastDirection != "up")
+                    direction = "down";
+                if (event.key.code == sf::Keyboard::Right && lastDirection != "left")
+                    direction = "right";
+                if (event.key.code == sf::Keyboard::Left && lastDirection != "right")
+                    direction = "left";
+            }
         }
 
         if (clock.getElapsedTime().asSeconds() >= moveInterval)
         {
             movement(currentColumn, currentRow, direction);
+            lastDirection = direction;
             clock.restart();
         }
 
